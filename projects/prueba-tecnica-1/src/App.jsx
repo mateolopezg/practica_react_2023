@@ -1,46 +1,25 @@
 import { useEffect, useState } from "react";
+import { getRandomFact } from "./services/facts";
+import { useCatImage } from "./hooks/useCatImage";
+import { useCatFact } from "./hooks/useCatFact";
 
-const CAT_ENDPOINT_RANDOM_FACT = 'https://catfact.ninja/fact';
-//const CAT_ENDPOINT_IMAGE_URL = `https://cataas.com/cat/says/${threeFirstWords}?size=50&color=red&json=true`;
-const CAT_PREFIX_IMAGE_URL = 'https://cataas.com';
 
 export function App() {
-    const [fact, setFact] = useState();
-    const [imageUrl, setImageUrl] = useState();
-    const [factError, setFactError] = useState();
+    const { fact, refreshFact } = useCatFact();
+    const { imageUrl } = useCatImage({fact});
 
-    useEffect(() => {
-        fetch(CAT_ENDPOINT_RANDOM_FACT)
-            .then(res => {
-                if (!res.ok) throw new Error('Error fetching fact')
-                return res.json()})
-            .then(data => {
-                const { fact } = data
-                setFact(fact)
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-    }, [])
-
-    useEffect(() => {
-        if (!fact) return
-
-        const threeFirstWords = fact.split(' ', 3).join(' ');
-
-                fetch(`https://cataas.com/cat/says/${threeFirstWords}?size=50&color=red&json=true`)
-                    .then(req => req.json())
-                    .then(res => {
-                        const { url } = res;
-                        setImageUrl(url);
-                    })
-    }, [])
+    const handleClick = async () => {
+        refreshFact()
+    }
 
     return (
         <main>
-            <h1>App Gatitos</h1>
+            <h1>App de gatitos</h1>
+
+            <button onClick={handleClick}>Get new fact</button>
+
             {fact && <p>{fact}</p>}
-            {imageUrl && <img src={`${CAT_PREFIX_IMAGE_URL}${imageUrl}`} alt={`Image extracted using the first rhee words for ${fact}`} />}
+            {imageUrl && <img src={imageUrl} alt={`Image extracted using the first rhee words for ${fact}`} />}
         </main>
     )
 }
