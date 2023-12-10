@@ -396,3 +396,17 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+# Archivos generados por Visual Studio Code
+.vscode/
+
+# Archivos generados por TypeScript
+*.js.map
+
+# Archivos generados por MongoDB
+*.mongo
+
+# Archivos generados por Node.js
+node_modules/
+
+# File
+db.js
